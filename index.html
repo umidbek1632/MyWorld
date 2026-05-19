@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shomurotov Umidbek World</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:#0a0a1a;color:#f0f0ff;overflow-x:hidden;line-height:1.6;min-height:100vh}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;line-height:1.2}
+a{text-decoration:none;color:inherit}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(20px);background:rgba(10,10,26,0.85);border-bottom:1px solid #2a2a4a}
+.nav-logo{font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700;color:#00e5ff;cursor:pointer}
+.nav-links{display:flex;gap:6px;list-style:none}
+.nav-links li a{color:#a0a0cc;font-size:0.85rem;font-weight:500;padding:8px 14px;border-radius:8px;transition:all 0.3s;cursor:pointer;display:block}
+.nav-links li a:hover,.nav-links li a.active{color:#00e5ff;background:rgba(0,229,255,0.08)}
+.btn{padding:10px 20px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.3s;border:none;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#00e5ff,#3b82f6);color:#0a0a1a;font-weight:700}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,229,255,0.4)}
+.btn-ghost{background:transparent;color:#a0a0cc;border:1px solid #2a2a4a}
+.btn-ghost:hover{color:#f0f0ff;border-color:#00e5ff}
+.btn-sm{padding:8px 14px;font-size:0.8rem}
+
+.page{display:none;min-height:100vh;padding-top:80px}
+.page.active{display:block}
+.page-content{max-width:1200px;margin:0 auto;padding:40px 24px}
+.page-header{text-align:center;margin-bottom:48px}
+.page-tag{display:inline-block;font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#00e5ff;margin-bottom:12px}
+.page-title{font-size:clamp(2rem,4vw,3rem);font-weight:700;margin-bottom:12px}
+.page-desc{color:#a0a0cc;max-width:500px;margin:0 auto}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px}
+.hero-title{font-size:clamp(2.5rem,7vw,5rem);font-weight:700;margin-bottom:24px}
+.hero-title span{background:linear-gradient(135deg,#00e5ff,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.25rem);color:#a0a0cc;max-width:600px;margin-bottom:48px}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+.video-card{background:#161633;border-radius:16px;overflow:hidden;border:1px solid #2a2a4a;transition:all 0.4s}
+.video-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,229,255,0.08)}
+.video-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;cursor:pointer}
+.video-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s}
+.video-card:hover .video-thumb img{transform:scale(1.05)}
+.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:rgba(0,229,255,0.9);opacity:0;transition:opacity 0.3s}
+.video-card:hover .play-btn{opacity:1}
+.video-info{padding:16px 20px}
+.video-info h4{font-size:0.95rem;margin-bottom:4px}
+.video-info p{color:#606080;font-size:0.8rem}
+
+.actions{display:flex;gap:4px;padding:10px 20px;border-top:1px solid #2a2a4a}
+.act-btn{background:none;border:none;color:#a0a0cc;font-size:0.8rem;padding:8px 12px;border-radius:8px;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px}
+.act-btn:hover{background:#1e1e3f;color:#00e5ff}
+.act-btn.liked{color:#ef4444}
+
+.comments{padding:0 20px 16px;display:none}
+.comments.open{display:block}
+.cmt{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(42,42,74,0.5)}
+.cmt:last-of-type{border:none}
+.cmt-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#00e5ff);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;flex-shrink:0}
+.cmt-name{font-weight:600;font-size:0.78rem}
+.cmt-text{font-size:0.8rem;color:#a0a0cc}
+.cmt-row{display:flex;gap:8px;margin-top:8px}
+.cmt-input{flex:1;padding:10px;background:#1e1e3f;border:1px solid #2a2a4a;border-radius:8px;color:#f0f0ff;font-size:0.8rem;font-family:'Inter',sans-serif;outline:none}
+.cmt-input:focus{border-color:#00e5ff}
+.cmt-send{padding:10px 14px;background:#00e5ff;color:#0a0a1a;border:none;border-radius:8px;font-weight:600;font-size:0.75rem;cursor:pointer}
+
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.gal-card{background:#161633;border-radius:12px;overflow:hidden;border:1px solid #2a2a4a;transition:all 0.4s}
+.gal-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,229,255,0.08)}
+.gal-img{aspect-ratio:4/3;overflow:hidden;cursor:pointer}
+.gal-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s}
+.gal-card:hover .gal-img img{transform:scale(1.08)}
+
+.social-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.soc-card{background:#161633;border:1px solid #2a2a4a;border-radius:16px;padding:28px 20px;text-align:center;transition:all 0.4s;display:block}
+.soc-card:hover{transform:translateY(-6px);border-color:#00e5ff;box-shadow:0 20px 60px rgba(0,229,255,0.15)}
+.soc-icon{font-size:2rem;margin-bottom:12px}
+.soc-name{font-weight:600;margin-bottom:4px}
+.soc-handle{font-size:0.8rem;color:#606080;margin-bottom:12px}
+.soc-follow{display:inline-block;padding:6px 14px;border-radius:100px;font-size:0.73rem;font-weight:600;background:rgba(0,229,255,0.1);color:#00e5ff;border:1px solid rgba(0,229,255,0.3)}
+.soc-card:hover .soc-follow{background:#00e5ff;color:#0a0a1a}
+
+.ai-box{max-width:700px;margin:0 auto;background:#161633;border-radius:20px;border:1px solid #2a2a4a;overflow:hidden;display:flex;flex-direction:column;height:550px}
+.ai-head{padding:18px 24px;border-bottom:1px solid #2a2a4a;display:flex;align-items:center;gap:12px;background:#1e1e3f}
+.ai-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#00e5ff,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:700;color:#0a0a1a;font-size:0.85rem}
+.ai-msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.ai-msgs::-webkit-scrollbar{width:4px}
+.ai-msgs::-webkit-scrollbar-thumb{background:#2a2a4a;border-radius:2px}
+.msg{max-width:80%;padding:12px 16px;border-radius:14px;font-size:0.88rem;line-height:1.5}
+.msg.bot{background:#1e1e3f;border:1px solid #2a2a4a;align-self:flex-start;border-bottom-left-radius:4px}
+.msg.usr{background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.2);align-self:flex-end;border-bottom-right-radius:4px}
+.ai-inp{padding:16px;border-top:1px solid #2a2a4a;display:flex;gap:12px}
+.ai-inp input{flex:1;background:#1e1e3f;border:1px solid #2a2a4a;border-radius:12px;padding:12px 16px;color:#f0f0ff;font-size:0.88rem;font-family:'Inter',sans-serif;outline:none}
+.ai-inp input:focus{border-color:#00e5ff}
+.ai-inp button{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#00e5ff,#3b82f6);border:none;cursor:pointer;color:#0a0a1a;font-size:1.2rem;display:flex;align-items:center;justify-content:center}
+
+.overlay{position:fixed;inset:0;background:rgba(5,5,15,0.9);backdrop-filter:blur(5px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#161633;border:1px solid #2a2a4a;border-radius:20px;padding:40px;width:90%;max-width:400px;position:relative}
+.modal h3{font-size:1.4rem;margin-bottom:24px}
+.modal input{width:100%;padding:14px;background:#1e1e3f;border:1px solid #2a2a4a;border-radius:10px;color:#f0f0ff;font-size:0.95rem;font-family:'Inter',sans-serif;outline:none;margin-bottom:20px}
+.modal input:focus{border-color:#00e5ff}
+.modal-x{position:absolute;top:14px;right:18px;background:none;border:none;color:#606080;cursor:pointer;font-size:1.4rem}
+
+.vp-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:3000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.vp-overlay.open{opacity:1;pointer-events:all}
+.vp-wrap{width:90%;max-width:880px;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden}
+.vp-wrap iframe,.vp-wrap video{width:100%;height:100%;border:none}
+.vp-x{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.lb{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:3000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.lb.open{opacity:1;pointer-events:all}
+.lb img{max-width:90%;max-height:85vh;border-radius:12px}
+.lb-x{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.ubadge{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:100px;background:rgba(15,15,42,0.7);border:1px solid #2a2a4a;cursor:pointer}
+.ubadge:hover{border-color:#00e5ff}
+.ubadge-a{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#00e5ff,#a855f7);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:#0a0a1a}
+.ubadge-n{font-size:0.8rem;font-weight:500}
+
+.hide{display:none!important}
+.footer{text-align:center;padding:40px 24px;border-top:1px solid #2a2a4a;color:#606080;font-size:0.85rem}
+
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.nav-toggle span{display:block;width:22px;height:2px;background:#f0f0ff;margin:5px 0}
+@media(max-width:768px){
+.nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(10,10,26,0.97);flex-direction:column;padding:16px;border-bottom:1px solid #2a2a4a}
+.nav-links.open{display:flex}
+.nav-toggle{display:block}
+.video-grid{grid-template-columns:1fr}
+.gallery-grid{grid-template-columns:repeat(2,1fr)}
+.social-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){.gallery-grid,.social-grid{grid-template-columns:1fr}.nav{padding:12px 16px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+<div class="nav-logo" id="logo">SU World</div>
+<button class="nav-toggle" id="toggle"><span></span><span></span><span></span></button><ul class="nav-links" id="navmenu">
+<li><a id="n-home" class="active">Bosh Sahifa</a></li>
+<li><a id="n-videos">Videolar</a></li>
+<li><a id="n-gallery">Rasmlar</a></li>
+<li><a id="n-social">Social</a></li>
+<li><a id="n-ai">AI Agent</a></li>
+</ul>
+<div id="authArea"></div>
+</nav>
+
+<div class="page active" id="p-home">
+<section class="hero">
+<h1 class="hero-title"><span>Shomurotov Umidbek</span><br>World</h1>
+<p class="hero-sub">Mening virtual dunyoyimga xush kelibsiz</p>
+<div class="hero-btns">
+<button class="btn btn-primary" id="go-videos">Videolar</button>
+<button class="btn btn-ghost" id="go-gallery">Rasmlar</button>
+<button class="btn btn-ghost" id="go-social">Social</button>
+<button class="btn btn-ghost" id="go-ai">AI Agent</button>
+</div>
+</section>
+</div>
+
+<div class="page" id="p-videos"><div class="page-content">
+<div class="page-header"><span class="page-tag">Media</span><h2 class="page-title">Mening Videolarim</h2><p class="page-desc">Men sizlar bilan ulashmoqchi bolgan videolar</p></div>
+<div class="video-grid" id="vGrid"></div>
+</div></div>
+
+<div class="page" id="p-gallery"><div class="page-content">
+<div class="page-header"><span class="page-tag">Galeriya</span><h2 class="page-title">Mening Rasmlarim</h2><p class="page-desc">Mening dunyoyim rasmlarda</p></div>
+<div class="gallery-grid" id="gGrid"></div>
+</div></div>
+
+<div class="page" id="p-social"><div class="page-content">
+<div class="page-header"><span class="page-tag">Tarmoqlar</span><h2 class="page-title">Social Media</h2><p class="page-desc">Meni kuzatib boring</p></div>
+<div class="social-grid" id="sGrid"></div>
+</div></div>
+
+<div class="page" id="p-ai"><div class="page-content">
+<div class="page-header"><span class="page-tag">AI Agent</span><h2 class="page-title">Umidbek AI</h2><p class="page-desc">Savol bering, javob olasiz</p></div>
+<div class="ai-box">
+<div class="ai-head"><div class="ai-ava">AI</div><div><b>Umidbek AI</b><br><small style="color:#10b981">Online</small></div></div>
+<div class="ai-msgs" id="aiMsgs"><div class="msg bot">Salom! Men Umidbek AI. Texnologiya, dasturlash, hayot haqida savol bering!</div></div>
+<div class="ai-inp"><input id="aiIn" placeholder="Yozing..."><button id="aiBtn">&#10148;</button></div>
+</div>
+</div></div>
+
+<div class="overlay" id="loginOv">
+<div class="modal">
+<button class="modal-x" id="closeLogin">&#10005;</button>
+<h3>Kirish</h3>
+<input id="nameIn" placeholder="Ismingizni yozing">
+<button class="btn btn-primary" style="width:100%;padding:14px" id="doLogin">Kirish</button>
+</div>
+</div>
+
+<div class="vp-overlay" id="vpOv">
+<button class="vp-x" id="closeVp">&#10005;</button>
+<div class="vp-wrap" id="vpWrap"></div>
+</div>
+
+<div class="lb" id="lbOv">
+<button class="lb-x" id="closeLb">&#10005;</button>
+<img id="lbImg" src="">
+</div>
+
+<footer class="footer">2026 Shomurotov Umidbek World</footer>
+
+<script>
+// ===== TELEGRAM (tokenlarni almashtiring) =====
+var TG_TOKEN = '8986329868:AAE_LywpHEufPXG-Wg-Lpsyjgpy7KapIy_U';
+var TG_CHAT = '1310281331';
+function tgSend(m){if(!TG_TOKEN)return;fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:TG_CHAT,text:m})}).catch(function(){})}
+
+// ===== OVOZ =====
+var actx=null;
+function beep(){
+  try{
+    if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+    var o=actx.createOscillator(),g=actx.createGain();
+    o.connect(g);g.connect(actx.destination);
+    o.frequency.setValueAtTime(700,actx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(350,actx.currentTime+0.06);
+    g.gain.setValueAtTime(0.1,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+0.1);
+    o.start();o.stop(actx.currentTime+0.1);
+  }catch(e){}
+}
+
+// ===== NAVIGATSIYA =====
+function go(name){
+  var pages=document.querySelectorAll('.page');
+  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+  document.getElementById('p-'+name).classList.add('active');
+  var links=document.querySelectorAll('.nav-links a');
+  for(var j=0;j<links.length;j++) links[j].classList.remove('active');
+  var nl=document.getElementById('n-'+name);
+  if(nl) nl.classList.add('active');
+  document.getElementById('navmenu').classList.remove('open');
+  window.scrollTo(0,0);
+  beep();
+}
+
+document.getElementById('logo').onclick=function(){go('home')};
+document.getElementById('n-home').onclick=function(){go('home')};
+document.getElementById('n-videos').onclick=function(){go('videos')};
+document.getElementById('n-gallery').onclick=function(){go('gallery')};
+document.getElementById('n-social').onclick=function(){go('social')};
+document.getElementById('n-ai').onclick=function(){go('ai')};
+document.getElementById('go-videos').onclick=function(){go('videos')};
+document.getElementById('go-gallery').onclick=function(){go('gallery')};
+document.getElementById('go-social').onclick=function(){go('social')};
+document.getElementById('go-ai').onclick=function(){go('ai')};
+document.getElementById('toggle').onclick=function(){beep();document.getElementById('navmenu').classList.toggle('open')};
+
+// ===== LOGIN =====
+function getUser(){var d=localStorage.getItem('su_u');return d?JSON.parse(d):null}
+function showAuth(){
+  var area=document.getElementById('authArea');
+  var u=getUser();
+  if(u){
+    area.innerHTML='<div class="ubadge" id="logoutB"><div class="ubadge-a">'+u.name[0].toUpperCase()+'</div><span class="ubadge-n">'+u.name+'</span></div>';
+    document.getElementById('logoutB').onclick=function(){beep();localStorage.removeItem('su_u');showAuth();buildV();buildG()};
+  } else {
+    area.innerHTML='<button class="btn btn-primary btn-sm" id="openLogin">Kirish</button>';
+    document.getElementById('openLogin').onclick=function(){beep();document.getElementById('loginOv').classList.add('open')};
+  }
+}
+document.getElementById('closeLogin').onclick=function(){beep();document.getElementById('loginOv').classList.remove('open')};
+document.getElementById('loginOv').onclick=function(e){if(e.target===this)this.classList.remove('open')};
+document.getElementById('doLogin').onclick=doLoginFn;
+document.getElementById('nameIn').onkeypress=function(e){if(e.key==='Enter')doLoginFn()};
+function doLoginFn(){
+  var n=document.getElementById('nameIn').value.trim();
+  if(!n)return;
+  localStorage.setItem('su_u',JSON.stringify({name:n}));
+  document.getElementById('nameIn').value='';
+  document.getElementById('loginOv').classList.remove('open');
+  beep();showAuth();buildV();buildG();
+}
+
+// ===== VIDEOLAR =====
+// LOKAL: {id:7,title:"Nom",src:"videos/fayl.mp4",thumb:"images/t.jpg",type:"local"}
+var vids=[
+{id:1,title:"Beautiful Nature 4K",src:"LXb3EKWsInQ",thumb:"https://img.youtube.com/vi/LXb3EKWsInQ/hqdefault.jpg",type:"youtube"},
+{id:2,title:"Relaxing Ocean Waves",src:"WHPEKLQID4U",thumb:"https://img.youtube.com/vi/WHPEKLQID4U/hqdefault.jpg",type:"youtube"},
+{id:3,title:"Space Journey",src:"GoW8Tf7hTGA",thumb:"https://img.youtube.com/vi/GoW8Tf7hTGA/hqdefault.jpg",type:"youtube"},
+{id:4,title:"Tokyo Night",src:"UYGa09UEQE0",thumb:"https://img.youtube.com/vi/UYGa09UEQE0/hqdefault.jpg",type:"youtube"},
+{id:5,title:"Mountain Timelapse",src:"36YnV9STBqc",thumb:"https://img.youtube.com/vi/36YnV9STBqc/hqdefault.jpg",type:"youtube"},
+{id:6,title:"Coding Lofi",src:"jfKfPfyJRdk",thumb:"https://img.youtube.com/vi/jfKfPfyJRdk/hqdefault.jpg",type:"youtube"}
+];
+var vL=JSON.parse(localStorage.getItem('svl')||'{}');
+var vC=JSON.parse(localStorage.getItem('svc')||'{}');
+
+function buildV(){
+  var g=document.getElementById('vGrid');g.innerHTML='';
+  for(var i=0;i<vids.length;i++){(function(v){
+    var likes=vL[v.id]||[];
+    var coms=vC[v.id]||[];
+    var u=getUser();
+    var liked=u&&likes.indexOf(u.name)!==-1;
+    var card=document.createElement('div');card.className='video-card';
+    var h='';
+    h+='<div class="video-thumb"><img src="'+v.thumb+'" alt="'+v.title+'"><div class="play-btn"></div></div>';
+    h+='<div class="video-info"><h4>'+v.title+'</h4><p>'+(v.type==='youtube'?'YouTube':'Lokal')+'</p></div>';
+    h+='<div class="actions"><button class="act-btn lk'+(liked?' liked':'')+'">&#9829; '+likes.length+'</button><button class="act-btn cm">&#9993; '+coms.length+'</button><button class="act-btn sh">&#8682; Share</button></div>';
+    h+='<div class="comments"><div class="cmlist"></div><div class="cmt-row"><input class="cmt-input" placeholder="Fikr yozing..."><button class="cmt-send">OK</button></div></div>';
+    card.innerHTML=h;
+    // Thumb click
+    card.querySelector('.video-thumb').onclick=function(){beep();openVP(v)};
+    // Like
+    card.querySelector('.lk').onclick=function(){beep();doLike('v',v.id,v.title);buildV()};
+    // Comment toggle
+    card.querySelector('.cm').onclick=function(){beep();var cs=card.querySelector('.comments');cs.classList.toggle('open')};
+    // Share
+    card.querySelector('.sh').onclick=function(){beep();doShare(v.title)};
+    // Comment send
+    card.querySelector('.cmt-send').onclick=function(){doComment('v',v.id,v.title,card.querySelector('.cmt-input'));buildV()};
+    card.querySelector('.cmt-input').onkeypress=function(e){if(e.key==='Enter'){doComment('v',v.id,v.title,this);buildV()}};
+    // Render comments
+    var cl=card.querySelector('.cmlist');
+    for(var c=0;c<coms.length;c++){
+      cl.innerHTML+='<div class="cmt"><div class="cmt-avatar">'+coms[c].name[0]+'</div><div><div class="cmt-name">'+coms[c].name+'</div><div class="cmt-text">'+coms[c].text+'</div></div></div>';
+    }
+    if(coms.length>0) card.querySelector('.comments').classList.add('open');
+    g.appendChild(card);
+  })(vids[i])}
+}
+
+// ===== RASMLAR =====
+// LOKAL: {id:10,src:"images/r.jpg",alt:"Tavsif"}
+var imgs=[
+{id:1,src:"https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&h=400&fit=crop",alt:"Earth"},
+{id:2,src:"https://images.unsplash.com/photo-1534996858221-380b92700493?w=500&h=400&fit=crop",alt:"Neon City"},
+{id:3,src:"https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=500&h=400&fit=crop",alt:"Stars"},
+{id:4,src:"https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&h=400&fit=crop",alt:"Abstract"},
+{id:5,src:"https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=500&h=400&fit=crop",alt:"Cyberpunk"},
+{id:6,src:"https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=500&h=400&fit=crop",alt:"Nebula"},
+{id:7,src:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=500&h=400&fit=crop",alt:"Mountain"},
+{id:8,src:"https://images.unsplash.com/photo-1516616370751-86d6bd8b0651?w=500&h=400&fit=crop",alt:"Tech"},
+{id:9,src:"https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=500&h=400&fit=crop",alt:"Aurora"}
+];
+var iL=JSON.parse(localStorage.getItem('sil')||'{}');
+var iC=JSON.parse(localStorage.getItem('sic')||'{}');
+
+function buildG(){
+  var g=document.getElementById('gGrid');g.innerHTML='';
+  for(var i=0;i<imgs.length;i++){(function(im){
+    var likes=iL[im.id]||[];
+    var coms=iC[im.id]||[];
+    var u=getUser();
+    var liked=u&&likes.indexOf(u.name)!==-1;
+    var card=document.createElement('div');card.className='gal-card';
+    var h='';
+    h+='<div class="gal-img"><img src="'+im.src+'" alt="'+im.alt+'"></div>';
+    h+='<div class="actions"><button class="act-btn lk'+(liked?' liked':'')+'">&#9829; '+likes.length+'</button><button class="act-btn cm">&#9993; '+coms.length+'</button><button class="act-btn sh">&#8682; Share</button></div>';
+    h+='<div class="comments"><div class="cmlist"></div><div class="cmt-row"><input class="cmt-input" placeholder="Fikr yozing..."><button class="cmt-send">OK</button></div></div>';
+    card.innerHTML=h;
+    card.querySelector('.gal-img').onclick=function(){beep();document.getElementById('lbImg').src=im.src.replace(/w=\d+/,'w=1400');document.getElementById('lbOv').classList.add('open')};
+    card.querySelector('.lk').onclick=function(){beep();doLike('i',im.id,im.alt);buildG()};
+    card.querySelector('.cm').onclick=function(){beep();card.querySelector('.comments').classList.toggle('open')};
+    card.querySelector('.sh').onclick=function(){beep();doShare(im.alt)};
+    card.querySelector('.cmt-send').onclick=function(){doComment('i',im.id,im.alt,card.querySelector('.cmt-input'));buildG()};
+    card.querySelector('.cmt-input').onkeypress=function(e){if(e.key==='Enter'){doComment('i',im.id,im.alt,this);buildG()}};
+    var cl=card.querySelector('.cmlist');
+    for(var c=0;c<coms.length;c++){
+      cl.innerHTML+='<div class="cmt"><div class="cmt-avatar">'+coms[c].name[0]+'</div><div><div class="cmt-name">'+coms[c].name+'</div><div class="cmt-text">'+coms[c].text+'</div></div></div>';
+    }
+    if(coms.length>0) card.querySelector('.comments').classList.add('open');
+    g.appendChild(card);
+  })(imgs[i])}
+}
+
+// ===== LIKE / COMMENT / SHARE =====
+function doLike(type,id,name){
+  var u=getUser();
+  if(!u){document.getElementById('loginOv').classList.add('open');return}
+  var st=type==='v'?vL:iL;
+  var key=type==='v'?'svl':'sil';
+  if(!st[id])st[id]=[];
+  var idx=st[id].indexOf(u.name);
+  if(idx===-1){st[id].push(u.name);tgSend(u.name+' like bosdi: '+name)}
+  else{st[id].splice(idx,1)}
+  localStorage.setItem(key,JSON.stringify(st));
+}
+function doComment(type,id,name,inp){
+  var u=getUser();
+  if(!u){document.getElementById('loginOv').classList.add('open');return}
+  var text=inp.value.trim();if(!text)return;
+  var st=type==='v'?vC:iC;
+  var key=type==='v'?'svc':'sic';
+  if(!st[id])st[id]=[];
+  st[id].push({name:u.name,text:text});
+  localStorage.setItem(key,JSON.stringify(st));
+  tgSend(u.name+' comment: '+name+' - "'+text+'"');
+  inp.value='';
+  beep();
+}
+function doShare(name){if(navigator.share)navigator.share({title:name,url:location.href});else{navigator.clipboard.writeText(location.href);alert('Link nusxalandi!')}}
+
+// ===== VIDEO PLAYER =====
+function openVP(v){
+  var w=document.getElementById('vpWrap');
+  if(v.type==='youtube')w.innerHTML='<iframe src="https://www.youtube.com/embed/'+v.src+'?autoplay=1" allowfullscreen allow="autoplay"></iframe>';
+  else w.innerHTML='<video src="'+v.src+'" controls autoplay style="width:100%;height:100%"></video>';
+  document.getElementById('vpOv').classList.add('open');
+}
+document.getElementById('closeVp').onclick=function(){beep();document.getElementById('vpOv').classList.remove('open');document.getElementById('vpWrap').innerHTML=''};
+document.getElementById('vpOv').onclick=function(e){if(e.target===this){this.classList.remove('open');document.getElementById('vpWrap').innerHTML=''}};
+
+// ===== LIGHTBOX =====
+document.getElementById('closeLb').onclick=function(){beep();document.getElementById('lbOv').classList.remove('open')};
+document.getElementById('lbOv').onclick=function(e){if(e.target===this)this.classList.remove('open')};
+
+// ===== SOCIAL =====
+var socs=[
+{name:"Instagram",handle:"@shomurotov_umidbek",icon:"IG",color:"#E1306C",url:"https://instagram.com/shomurotov_umidbek"},
+{name:"Telegram",handle:"@shomurotov_umidbek",icon:"TG",color:"#0088cc",url:"https://t.me/shomurotov_umidbek"},
+{name:"YouTube",handle:"Shomurotov Umidbek",icon:"YT",color:"#FF0000",url:"https://youtube.com/@shomurotov_umidbek"},
+{name:"TikTok",handle:"@shomurotov_umidbek",icon:"TT",color:"#010101",url:"https://tiktok.com/@shomurotov_umidbek"},
+{name:"GitHub",handle:"@shomurotov",icon:"GH",color:"#6e40c9",url:"https://github.com/shomurotov"},
+{name:"Twitter/X",handle:"@shomurotov",icon:"X",color:"#1DA1F2",url:"https://x.com/shomurotov"},
+{name:"LinkedIn",handle:"Shomurotov Umidbek",icon:"LI",color:"#0A66C2",url:"https://linkedin.com/in/shomurotov"}
+];
+function buildS(){
+  var g=document.getElementById('sGrid');var h='';
+  for(var i=0;i<socs.length;i++){
+    var s=socs[i];
+    h+='<a class="soc-card" href="'+s.url+'" target="_blank"><div class="soc-icon" style="background:'+s.color+'20;color:'+s.color+'"><b>'+s.icon+'</b></div><div class="soc-name">'+s.name+'</div><div class="soc-handle">'+s.handle+'</div><span class="soc-follow">Kuzatish</span></a>';
+  }
+  g.innerHTML=h;
+}
+
+// ===== AI =====
+var aiDB={
+  hi:['salom','hello','hi','hey','assalom'],
+  about:['kim','who','umidbek','shomurotov','haqida'],
+  tech:['texnolog','tech','stack','dastur','code','javascript','react','python','program'],
+  hobby:['qiziq','hobby','sevimli','vaqt'],
+  goal:['maqsad','goal','orzu','kelajak'],
+  web:['sayt','website','sahifa'],
+  advice:['maslahat','qanday','organ','boshlash','tavsiya'],
+  life:['hayot','motivatsiya','ilhom','stress','qiyin'],
+  thanks:['rahmat','thanks','yaxshi','ajoyib','super']
+};
+var aiR={
+  hi:['Salom! Xush kelibsiz! Savolingizni bering.','Assalomu alaykum! Sizga yordam berishga tayyorman.'],
+  about:['Umidbek - yosh web developer. JavaScript, React, Node.js biladi. IT kompaniya yaratish orzusi bor!','Umidbek Ozbekistonlik full-stack dasturchi. UI/UX dizayn va AI bilan ham shugullanadi.'],
+  tech:['Tech stack: JavaScript, React, Next.js, Node.js, Python, MongoDB, PostgreSQL, Docker.','Frontend: React+Tailwind. Backend: Node.js. Database: MongoDB. Deploy: Vercel.'],
+  hobby:['Qiziqishlari: Dasturlash, dizayn, kosmologiya, musiqa, kitob, sport.','Bosh vaqtida: Open source, YouTube, shaxmat, podcast.'],
+  goal:['Maqsad: Global tech startup yaratish, Ozbekiston IT ni rivojlantirish.','Reja: Full-stack expert, startap, 1000+ ish orin yaratish.'],
+  web:['Bu sayt Pure HTML/CSS/JS da yozilgan, framework yoq, tez ishlaydi!','Xususiyatlari: AI chat, video, galeriya, like/comment, Telegram notification.'],
+  advice:['Dasturlashni organish: HTML > CSS > JS > React > Backend. Har kuni kod yozing!','Portfolio yarating, GitHub da faol boling, community larga qoshiling.'],
+  life:['Har bir qiyinchilik sizni kuchliroq qiladi. Davom eting!','Kichik qadamlar bilan boshlang. Consistency eng muhim.'],
+  thanks:['Marhamat! Yana savol bolsa yozing!','Rahmat! Boshqa savol bormi?']
+};
+function aiReply(m){
+  var low=m.toLowerCase();
+  var cats=Object.keys(aiDB);
+  for(var i=0;i<cats.length;i++){
+    var kws=aiDB[cats[i]];
+    for(var j=0;j<kws.length;j++){
+      if(low.indexOf(kws[j])!==-1){
+        var rs=aiR[cats[i]];
+        return rs[Math.floor(Math.random()*rs.length)];
+      }
+    }
+  }
+  return 'Qiziqarli! Umidbek haqida, texnologiya, dasturlash yoki hayot haqida sorang.';
+}
+function sendAi(){
+  var inp=document.getElementById('aiIn');
+  var t=inp.value.trim();if(!t)return;
+  var box=document.getElementById('aiMsgs');
+  box.innerHTML+='<div class="msg usr">'+t+'</div>';
+  inp.value='';box.scrollTop=box.scrollHeight;beep();
+  setTimeout(function(){
+    box.innerHTML+='<div class="msg bot">'+aiReply(t)+'</div>';
+    box.scrollTop=box.scrollHeight;
+  },1000+Math.random()*1000);
+}
+document.getElementById('aiBtn').onclick=sendAi;
+document.getElementById('aiIn').onkeypress=function(e){if(e.key==='Enter')sendAi()};
+
+// ESC
+document.onkeydown=function(e){if(e.key==='Escape'){document.getElementById('loginOv').classList.remove('open');document.getElementById('vpOv').classList.remove('open');document.getElementById('vpWrap').innerHTML='';document.getElementById('lbOv').classList.remove('open')}};
+
+// INIT
+buildV();buildG();buildS();showAuth();
+</script>
+</body>
+</html>
